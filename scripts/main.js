@@ -21,8 +21,9 @@ let categorias = d.getElementById ('categorias');
 let banner = d.querySelector ('header div');
 let respuestaCorrecta;
 let siguienteClicked= true;
-let puntaje = 0;
+//let puntaje = 0;
 let cartaSeleccionada = [];
+
 
 
 
@@ -229,13 +230,13 @@ let respuestasCorrectas = 0;
 let errores = 0;
 
 function testLoop(cardArray){
-    if (siguienteClicked){
-        modalTest (cardArray);
-     } 
-
-
+   
+        if (siguienteClicked){
+            modalTest (cardArray);
+         } 
+    
+    
 }
-
 
 function modalTest (cardArray){
     //Muestro una carta con cinco significados aleatorios dentro de los cuales está el correcto
@@ -368,21 +369,19 @@ function modalTest (cardArray){
             console.log(errores);
          }
 
-         
-    if (errores > 3){
-        let modal = d.querySelector ('.modal');
-        modal.remove ();
-        categorias.className = '';
-        banner.className = '';
-        respuestasCorrectas = 0;
-        errores = 0; 
-        console.log('intenta de nuevo');
-        respuestaCorrecta = "";
-        siguienteClicked = true;
-    } else if (respuestasCorrectas > 5){
-        console.log('Ganaste una tirada!');
-        
-    }
+         let modal = d.querySelector ('.modal');
+
+         if (errores > 3){
+             modal.remove ();
+             resetGame ();
+             console.log('intenta de nuevo');
+         } else if (respuestasCorrectas >= 2){
+             console.log('Ganaste una carta!');
+             modal.remove ();
+             resetGame ();
+
+             
+         }
 
     });
 
@@ -452,5 +451,17 @@ function shuffledArray (array){
 
         return shuffledArray;
     }
+
+}
+
+function resetGame (){
+    console.log('Game reseted');
+    respuestasCorrectas = 0;
+    errores = 0; 
+    respuestaCorrecta = "";
+    siguienteClicked = true;
+    cartaSeleccionada = [];
+    categorias.className = '';
+    banner.className = '';
 
 }
