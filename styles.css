@@ -1,0 +1,300 @@
+@import url('https://fonts.googleapis.com/css2?family=Calistoga&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Shrikhand&family=Yeseva+One&display=swap');
+
+*{
+    margin: 0;
+    box-sizing: border-box;
+}
+
+/* POPPINS
+ .poppins-thin { font-family: "Poppins", sans-serif; font-weight: 100; font-style: normal;}
+  
+  .poppins-extralight { font-family: "Poppins", sans-serif; font-weight: 200;font-style: normal;}
+  
+  .poppins-light {font-family: "Poppins", sans-serif; font-weight: 300;
+    font-style: normal; }
+  
+  .poppins-regular { font-family: "Poppins", sans-serif;  font-weight: 400; font-style: normal;}
+  
+  .poppins-medium {  font-family: "Poppins", sans-serif; font-weight: 500;
+    font-style: normal;}
+  
+  .poppins-semibold {  font-family: "Poppins", sans-serif;  font-weight: 600;  font-style: normal; }
+  
+  .poppins-bold {    font-family: "Poppins", sans-serif;    font-weight: 700;    font-style: normal;  }
+  
+  .poppins-extrabold {    font-family: "Poppins", sans-serif;    font-weight: 800;    font-style: normal;  }
+  
+  .poppins-black {    font-family: "Poppins", sans-serif;    font-weight: 900;    font-style: normal;  }
+  
+  .poppins-thin-italic {    font-family: "Poppins", sans-serif;    font-weight: 100;    font-style: italic;  }
+  
+  .poppins-extralight-italic {    font-family: "Poppins", sans-serif;    font-weight: 200;    font-style: italic;  }
+  
+  .poppins-light-italic {    font-family: "Poppins", sans-serif;    font-weight: 300;    font-style: italic;  }
+  
+  .poppins-regular-italic {    font-family: "Poppins", sans-serif;
+    font-weight: 400;    font-style: italic;  }
+  
+  .poppins-medium-italic {    font-family: "Poppins", sans-serif;    font-weight: 500;    font-style: italic;  }
+  
+  .poppins-semibold-italic {    font-family: "Poppins", sans-serif;    font-weight: 600;    font-style: italic;  }
+  
+  .poppins-bold-italic {    font-family: "Poppins", sans-serif;    font-weight: 700;    font-style: italic;  }
+  
+  .poppins-extrabold-italic {    font-family: "Poppins", sans-serif;    font-weight: 800;    font-style: italic;  }
+  
+  .poppins-black-italic {    font-family: "Poppins", sans-serif;
+    font-weight: 900;    font-style: italic;  }
+   */
+
+  /* YESEVA 
+  .yeseva-one-regular {    font-family: "Yeseva One", serif;    font-weight: 400;    font-style: normal;  }
+ */  
+
+ /* SHRIKHAND
+ .shrikhand-regular {  font-family: "Shrikhand", serif;
+  font-weight: 400;  font-style: normal;
+}
+
+ */  
+ 
+
+:root{
+    
+    --main-color: #5840D4;
+    --main-color-dark:#211A66;
+    --text-headings: #211A66;
+    --text-deco-color: #F5B6D1;
+    --text-headings-2: #F5B6D1;
+    --text-color: #211A66;
+    --text-color-light: #f5f5f5;
+    --bg-color: #5840D4;
+    --bg-color-light: #7464C6;
+    --bg-dark-color: #18181A;
+    --text-deco-color: #F5B6D1;
+    --box-shadow: 3px 3px 3px 0px #18181ac7;
+}
+
+body{
+    font-family: "Poppins", sans-serif;  
+    font-weight: 400; 
+    font-style: normal;
+}
+
+h1{
+    font-family: "Yeseva One", serif;    font-weight: 400;    font-style: normal;
+    color: var(--text-headings-2);
+    font-size: 3rem;
+    display: block;
+    padding-top: 30%;
+}
+
+img, picture, video, svg, canvas{
+    max-width: 100%;
+    display: block;
+}
+
+input, button, textarea, select{
+    font: inherit;
+}
+
+ul{
+    padding: 0;
+    list-style: none;
+}
+
+a{
+text-decoration: none;
+}
+
+
+
+header{
+    height: 50%;
+    background-color: var(--bg-color);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+header div{
+    width: 50%;
+    height: 100%;
+    padding-block: 3rem;
+    text-align: center;
+    background-image: url(./img/bola-magica-white.png);
+    background-size: 35%;
+    background-position: top center;
+    background-repeat: no-repeat;
+    padding-bottom: 5rem;
+
+}
+
+header div p{
+    font-style: italic;
+    color: var(--text-color-light);
+}
+
+nav{
+    width: 100%;
+    padding: 1rem;
+    display: flex;
+    justify-content: left;
+    align-items:center;
+}
+
+nav a{
+    display: block;
+    width: 2rem;
+    height: 2rem;
+    background-image: url(img/bola-magica-white.png);
+    background-repeat: no-repeat;
+    background-size: 80%;
+    background-position: left;
+    color: var(--text-color-light);
+}
+
+nav a span{
+   /*  visibility: hidden; */
+   display: block;
+   height: 80%;
+   padding-left: 2rem;
+   padding-top: .3rem;
+}
+
+#categorias{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: top;
+    gap: 1rem;
+    margin: 2rem;
+    color: var(--text-color-light);
+}
+
+.card-categoria{
+    min-height: 40vh;
+    max-width: 20%;
+    padding: 1rem;
+    background-color: var(--bg-color-light);
+    text-align: center;
+    padding-top: 20vh;
+    display: flex;
+    flex-direction: column;
+    justify-content:space-between;
+    border-radius: 1rem;
+    box-shadow: var(--box-shadow);
+    background-size: 20vh;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-position: top center;
+}
+
+.card-categoria h2{
+    color: var(--text-headings-2);
+}
+
+.card-categoria:first-of-type{
+    background-image: url(./img/icon-03.png);
+}
+
+
+.card-categoria:nth-of-type(2){
+    background-image: url(./img/icon-04.png);
+  
+}
+
+.card-categoria:nth-of-type(3){
+    background-image: url(./img/icon-05.png);
+
+}
+
+/*LEARN CARDS */
+ #learn-cards{
+    background: var(--text-color-light);
+    display: flex;
+    justify-content: space-around;
+    flex-direction: column;
+    align-items: center;
+    overflow: scroll;
+    padding: 3rem;
+    width: 100%;
+}
+
+.containerCards {
+    display: flex;
+    flex: row;
+    flex-wrap: wrap;
+    width: 100%;
+    gap: 1rem;
+}
+
+.containerCards article {
+    width: 15%;
+    background-color: var(--bg-color);
+    padding: 1rem;
+}
+
+img{
+    width: 50%;
+}
+
+.ocultar{
+    display: none !important;
+}
+
+.modal {
+    position: fixed;
+    z-index: 1;
+    display: flex;
+    /*flex-direction: column;*/
+    /*justify-content: center;*/
+    align-items: center;
+    justify-content: center;
+    align-content: center;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    overflow: auto;
+    padding: 2rem;
+    background-color: rgba(0, 0, 0, 0.9);
+}
+
+.modal > div{
+    background: #FFFFFF;
+    display: flex;
+    justify-content:baseline;
+    flex-direction: column;
+    align-items: center;
+    height: 80%;
+    padding: 3rem;
+    min-width: 400px;
+    border-radius: 2rem;
+    overflow: scroll;
+}
+
+.modal div img{
+    height: 60%;
+    width: auto;
+    position: sticky;
+    
+}
+
+input[type="radio"]{
+    display: none;
+}
+
+input[type="radio"]:checked + label{
+  background-color: var(--bg-color);
+  color: var(--text-color-light);
+}
+
+
+input + label{
+display: block;
+padding:.5rem;
+margin-block: .5rem;
+}
+

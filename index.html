@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PWA</title>
+    <link rel="stylesheet" href="./styles.css">
+    <link rel="manifest" href="manifest.webmanifest">
+
+</head>
+<body>
+    <header >
+        <nav>
+            <a href="index.html"><span>Home</span></a>
+        </nav>
+        <div>
+        <h1>Tarot Mentor</h1>
+        <p>Tarot Learning Made Easy</p>
+        </div>
+    </header>
+
+    <main>
+<!--         <section>
+            <p>Explicación</p>
+        </section> -->
+
+        <section id="categorias">
+            <article class="card-categoria" id="learn">
+                <h2>Learn</h2>
+                <p>Here you will find all the cards with their meanings. Use them to study</p>
+                <button>See the cards</button>
+            </article>
+
+            <article class="card-categoria" id="test">
+                <h2>Practice</h2>
+                <p>We are going to show you a Quiz. If your answer is correct, the card will go to your collection</p>
+                <button>Test me</button>
+            </article>
+
+            <article class="card-categoria" id="collection">
+                <h2>Your collection</h2>
+                <p>Here is your collection of cards. You will find all the cards you already know.</p>
+                <button >See my progress</button>
+            </article>
+        </section>
+
+ 
+
+    </main>
+    <footer></footer>
+
+    <script src="service-worker.js"></script>
+    <script src="scripts/main.js"></script>
+</body>
+</html>
