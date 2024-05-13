@@ -470,8 +470,45 @@ banner.className = '';
 }
 
 //BOTON COLECCIÓN
-btnCollection.addEventListener ('click', )
+btnCollection.addEventListener ('click', seeCollection);
 
+function seeCollection (){
+    categorias.className = 'ocultar';
+    banner.className = 'ocultar';
+
+    let section = d.createElement ('section');
+    section.id = 'cards-collection';
+
+    let h2 = d.createElement ('h2');
+    h2.innerText = 'My collection';
+    section.appendChild (h2);
+    
+    let p = d.createElement ('p');
+    p.innerText = 'You will find here all the cards that you have already learned.';
+    section.appendChild (p);
+
+    let div = d.createElement ('div');
+    section.appendChild (div);
+
+    //Obtengo la información de LS y la parseo
+    let cardsCollectionLS = JSON.parse(localStorage.getItem('cardsCollection')) || [];
+
+    console.log(cardsCollectionLS);
+ /*    for (item in array){
+        let card = d.createElement ('article');
+
+        let h3 = d.createElement ('h3');
+        h3.innerText = item.name;
+
+        let img = d.createElement ('img');
+        img.src = item.img;
+    } */
+
+    main.appendChild (section);
+}
+
+
+    
 
 
 function cardsCollectionLS (){
