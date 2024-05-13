@@ -1,3 +1,6 @@
+//Inicializo LocalStorage
+cardsCollectionLS ();
+
 //REGISTRO DEL SERVICE WORKER
 if ('serviceWorker' in navigator){
     window.addEventListener ('load', function(){
@@ -9,6 +12,7 @@ if ('serviceWorker' in navigator){
             });
     });
 }
+
 
 //GLOBALES
 const d = document;
@@ -27,8 +31,6 @@ let newCardsEarned = []; //Array que contendrá la o las nuevas cartas ganadas
 let respuestasCorrectas = 0;
 let errores = 0;
 
-//Inicializo LocalStorage
-cardsCollectionLS ();
 
 //BOTON APRENDER CARTAS
 btnLearn.addEventListener ('click', obtainCards);
@@ -79,7 +81,7 @@ function showCards (arrayCards)
         section.appendChild (p);
 
     let btnBack = d.createElement ('button');
-    btnBack.innerText = 'Volver al inicio';
+    btnBack.innerText = 'Go back';
         section.appendChild (btnBack);
 
     btnBack.addEventListener ('click', ()=>{
@@ -90,7 +92,8 @@ function showCards (arrayCards)
 
     //Armo un contenedor para ir guardando los articles con las cards
     let containerCards =d.createElement ('div');
-    containerCards.className = 'containerCards'
+    containerCards.className = 'containerCards';
+
                    
         for (let card of arrayCards){
             let article = d.createElement ('article');
@@ -100,17 +103,17 @@ function showCards (arrayCards)
                 //Creo una modal donde se muestra la información detallada de la carta con la función modalCard ()
                 modalCard(card);
             })
-                    
+            let divInfo = d.createElement ('div');
+            divInfo.class = 'info-card';
+
             let h3 = d.createElement ('h3');
             h3.innerText = card.name;
-                article.appendChild (h3);
+            divInfo.appendChild (h3);
 
             let img = d.createElement ('img');
             img.src = `img/cards/${card.img}`;
-                article.appendChild (img);
+            divInfo.appendChild (img);
 
-            let divInfo = d.createElement ('div');
-            divInfo.class = 'info-card';
 
             let pArcana = d.createElement ('p');
             let spanArcana = d.createElement ('span');
@@ -155,13 +158,15 @@ function modalCard (cardArray)
         containerCard.className = 'modal';
 
         let containerCardDetail = d.createElement ('div');
+        containerCardDetail.className = 'containerInfo';
 
         let btnCerrar = d.createElement ('button');
         btnCerrar.innerText = 'X';
+        btnCerrar.className = 'btnCerrar'
         btnCerrar.addEventListener ('click',()=>{
             containerCard.remove ();
         });
-        containerCard.appendChild (btnCerrar);
+        containerCardDetail.appendChild (btnCerrar);
 
 
         let h3 = d.createElement ('h3');
@@ -245,8 +250,22 @@ function modalTest (cardArray){
 let containerTest = d.createElement ('div');
 containerTest.className = 'modal';
 
+
+
 let containerTestInfo = d.createElement ('div');
 containerTestInfo.id = "question";
+
+let btnCerrar = d.createElement ('button');
+btnCerrar.innerText = 'X';
+btnCerrar.className = 'btnCerrar'
+btnCerrar.addEventListener ('click',()=>{
+    containerTest.remove ();
+    categorias.className = '';
+    banner.className = '';
+});
+
+containerTestInfo.appendChild (btnCerrar);
+
 let meanings = []; //Lista de todos los significados
 let meaningsCorrect = []; //Lista de todas las respuestas correctas
 let options = []; //Lista de las respuestas que se van a mostrar en la pregunta
@@ -342,8 +361,10 @@ for (item of optionsShow){
 }
 
 let buttonNext = d.createElement ('button');
-buttonNext.innerText = 'Siguiente';
+buttonNext.innerText = 'Send';
 containerTestInfo.appendChild (buttonNext);
+
+
 
 buttonNext.addEventListener ('click', ()=>{
     //Guardo la respuesta en la variable
@@ -364,29 +385,101 @@ buttonNext.addEventListener ('click', ()=>{
     console.log(respuestasCorrectas);
     } else {
         errores++;
+        
+        let notif = d.getElementById ('notif');
+        console.log(notif);
+
+        if (notif){
+            notif.remove();
+        }
+
+        let notification = d.createElement ('div');
+        notification.id = 'notif';
+
+        let notificationContent = d.createElement ('p');
+        notificationContent.innerText = 'Incorrect';
+
+        let numberMistakes = d.createElement ('p');
+        numberMistakes.innerText= `Mistakes: ${errores}`;
+
+        notification.appendChild (notificationContent);
+        notification.appendChild (numberMistakes);
+        containerTestInfo.appendChild (notification);
         console.log('try again');
-        siguienteClicked = false;
-        console.log(errores);
+        siguienteClicked = false;       
      }
 
-     let modal = d.querySelector ('.modal');
+    let modal = d.querySelector ('.modal');
 
-     if (errores >= 3){
-         modal.remove ();
-         resetGame ();
-         console.log('intenta de nuevo');
-     } else if (respuestasCorrectas >= 1){
-         console.log('Ganaste una carta!');
-         modal.remove ();
-         resetGame ();
+    if (errores >= 3){
+        modal.remove ();
+        resetGame ();
+        console.log('intenta de nuevo');
+
+        let containerPrompt = d.createElement ('div');
+        containerPrompt.className = 'modal prompt';
+
+        let containerTextPrompt = d.createElement ('div');
+        containerTextPrompt.className = 'box';
+
+        let h2 = d.createElement ('h2');
+        h2.innerText = 'Vuelve a intentarlo';
+
+        let p = d.createElement ('p');
+        p.innerText = 'Has cometido 3 errores. Vuelve a empezar';
+
+        let btnCerrar = d.createElement ('button');
+        btnCerrar.innerText = 'X';
+        btnCerrar.className = 'btnCerrar'
+        btnCerrar.addEventListener ('click',()=>{
+            containerPrompt.remove ();
+            categorias.className = '';
+            banner.className = '';
+        });
+
+        containerTextPrompt.appendChild (btnCerrar);
+        containerTextPrompt.appendChild (h2);
+        containerTextPrompt.appendChild (p);
+        containerPrompt.appendChild (containerTextPrompt);
+        main.appendChild (containerPrompt);
+
+    } else if (respuestasCorrectas >= 1){
+        console.log('Ganaste una carta!');
+        modal.remove ();
+        resetGame ();
         //console.log(aleatoryCard);
+        let containerPrompt = d.createElement ('div');
+        containerPrompt.className = 'modal prompt';
+
+        let containerTextPrompt = d.createElement ('div');
+        containerTextPrompt.className = 'box';
+
+        let h2 = d.createElement ('h2');
+        h2.innerText = 'Felicitaciones';
+
+        let p = d.createElement ('p');
+        p.innerText = 'Has ganado una carta';
+
+        let btnCerrar = d.createElement ('button');
+        btnCerrar.innerText = 'X';
+        btnCerrar.className = 'btnCerrar'
+        btnCerrar.addEventListener ('click',()=>{
+            containerPrompt.remove ();
+            
+        });
+
+        containerTextPrompt.appendChild (btnCerrar);
+        containerTextPrompt.appendChild (h2);
+        containerTextPrompt.appendChild (p);
+        containerPrompt.appendChild (containerTextPrompt);
+        main.appendChild (containerPrompt);
 
         newCardsEarned.push (aleatoryCard);
 
-        let actualCardscollection = cardsCollectionAdd (newCardsEarned);
-        console.log(actualCardscollection);
-
-         newCardsEarned = [];
+        cardsCollectionAdd (newCardsEarned);
+       // console.log(JSON.parse(localStorage.getItem('cardsCollection')) || []);
+        
+       //  newCardsEarned = [];
      }
 });
 
@@ -473,6 +566,7 @@ banner.className = '';
 btnCollection.addEventListener ('click', seeCollection);
 
 function seeCollection (){
+
     categorias.className = 'ocultar';
     banner.className = 'ocultar';
 
@@ -492,18 +586,24 @@ function seeCollection (){
 
     //Obtengo la información de LS y la parseo
     let cardsCollectionLS = JSON.parse(localStorage.getItem('cardsCollection')) || [];
+   // console.log('parse' ,cardsCollectionLS);
 
-    console.log(cardsCollectionLS);
- /*    for (item in array){
+    for (let item of cardsCollectionLS){
+        console.log('item', item[0]);
+        
         let card = d.createElement ('article');
 
         let h3 = d.createElement ('h3');
-        h3.innerText = item.name;
+        h3.innerText = item[0].name;
+        card.appendChild (h3);
 
         let img = d.createElement ('img');
-        img.src = item.img;
-    } */
+        img.src = `./img/cards/${item[0].img}`;
+        card.appendChild (img);
 
+        div.appendChild (card);
+
+    }
     main.appendChild (section);
 }
 
@@ -513,13 +613,31 @@ function seeCollection (){
 
 function cardsCollectionLS (){
     //Guardo el array de colección en Local Storage
-    const cardsCollectionStart = [];
-    localStorage.setItem('cardsCollection', JSON.stringify(cardsCollectionStart));
-    console.log('LS Creado');
+    if (!localStorage.getItem ('cardsCollection')){
+        const cardsCollectionStart = [];
+        localStorage.setItem('cardsCollection', JSON.stringify(cardsCollectionStart));
+        console.log('LS inicializado');
+    } else {
+        console.log('Ls ya estaba');
+    }
 }
 
 function cardsCollectionAdd (newCardsEarned){
-    //Obtengo la información de LS y la parseo
+    if (Array.isArray(newCardsEarned) && newCardsEarned.length > 0) {
+        let cardsCollectionAchieved = JSON.parse(localStorage.getItem('cardsCollection')) || [];
+
+        // Agregar nuevas cartas a la colección existente
+        cardsCollectionAchieved = cardsCollectionAchieved.concat(newCardsEarned);
+
+        localStorage.setItem('cardsCollection', JSON.stringify(cardsCollectionAchieved));
+        console.log('LS recargado', cardsCollectionAchieved);
+
+        return cardsCollectionAchieved;
+    } else {
+        console.log('No se agregaron nuevas cartas. El conjunto de nuevas cartas está vacío.');
+        return [];
+    }
+    /* //Obtengo la información de LS y la parseo
     let cardsCollectionAchieved = JSON.parse(localStorage.getItem('cardsCollection')) || [];
 
     //Le agrego las nuevas cartas
@@ -529,5 +647,10 @@ function cardsCollectionAdd (newCardsEarned){
 
     console.log('LS recargado', cardsCollectionAchieved);
 
-    return cardsCollectionAchieved;
+    return cardsCollectionAchieved; */
 }
+
+
+//Si estan repetidas, no guardarlas en la collection
+//Inicio de sesión
+//Varias preg por carta

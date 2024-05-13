@@ -69,10 +69,12 @@
     --text-color: #211A66;
     --text-color-light: #f5f5f5;
     --bg-color: #5840D4;
-    --bg-color-light: #7464C6;
+    --bg-color-light: rgb(116, 99, 199);
     --bg-dark-color: #18181A;
     --text-deco-color: #F5B6D1;
     --box-shadow: 3px 3px 3px 0px #18181ac7;
+    --gradient1: linear-gradient(0deg, rgb(107, 86, 214) 0%, rgba(88,64,212,1) 100%);
+    --gradient-transparent : linear-gradient(0deg, rgba(127,94,211,0.5841121495327103) 0%, rgba(127,94,211,0.6004672897196262) 21%, rgba(33,26,102,0.7313084112149533) 100%);
 }
 
 body{
@@ -128,7 +130,6 @@ header div{
     background-position: top center;
     background-repeat: no-repeat;
     padding-bottom: 5rem;
-
 }
 
 header div p{
@@ -220,6 +221,28 @@ nav a span{
     overflow: scroll;
     padding: 3rem;
     width: 100%;
+    background-color: var(--bg-color);
+    background-blend-mode: lighten;
+    color: var(--text-color-light);
+}
+
+#learn-cards h2{
+color: var(--text-deco-color);
+}
+
+#learn-cards button{
+    margin-block: 1rem;
+    background-color: transparent;
+    border: none;
+    border-bottom: 1px var(--text-deco-color) solid; 
+    cursor: pointer;
+    color: var(--text-color-light);
+}
+
+#learn-cards button:hover{
+   background-color:#f5f5f542;
+   font-weight: 600;
+   
 }
 
 .containerCards {
@@ -228,11 +251,23 @@ nav a span{
     flex-wrap: wrap;
     width: 100%;
     gap: 1rem;
+    background-image: url(./img/icon-03.png);
+
 }
 
 .containerCards article {
     width: 15%;
-    background-color: var(--bg-color);
+    padding: 1rem;
+   /*  background-image: url(./img/paper-texture.jpg); */
+    background-color: var(--text-color-light);
+    background: var(--gradient1);
+    padding: 1rem;
+    box-shadow: var(--box-shadow);
+}
+
+.containerCards article div{
+    border-radius: 1rem;
+    border: var(--text-deco-color) solid 1px;
     padding: 1rem;
 }
 
@@ -260,6 +295,7 @@ img{
     overflow: auto;
     padding: 2rem;
     background-color: rgba(0, 0, 0, 0.9);
+    overflow: auto;
 }
 
 .modal > div{
@@ -276,11 +312,20 @@ img{
 }
 
 .modal div img{
-    height: 60%;
-    width: auto;
+    width: 50%;
     position: sticky;
-    
 }
+
+.modal .btnCerrar{
+    position: relative;
+    z-index: 1;
+    top:0;
+    right: -50%;
+    color: var(--main-color-dark);
+    background-color: none;
+    border: none;
+} 
+
 
 input[type="radio"]{
     display: none;
@@ -291,27 +336,111 @@ input[type="radio"]:checked + label{
   color: var(--text-color-light);
 }
 
-
 input + label{
 display: block;
 padding:.5rem;
 margin-block: .5rem;
 }
 
-#cards-collection div {
+#cards-collection {
+    text-align: center;
+    background: var(--text-color-light);
     display: flex;
-    gap: 1rem;
+    justify-content: space-around;
+    flex-direction: column;
+    align-items: center;
+    overflow: scroll;
+    padding: 3rem;
+    width: 100%;
+    background-color: var(--bg-color);
+    background-blend-mode: lighten;
+    color: var(--text-color-light);
+}
+
+#cards-collection h2{
+    color: var(--text-deco-color);
+}
+
+#cards-collection div {
+    margin-top: 2rem;
     justify-content: center;
+    display: flex;
+    flex: row;
+    flex-wrap: wrap;
+    width: 100%;
+    gap: 1rem;
+    background-image: url(./img/icon-03.png);
 }
 
 #cards-collection div article{
 width: 20%;
-background-color:var(--bg-color);
-display: flex;
+background-color: var(--text-color-light);
+background: var(--gradient1);
+padding: 1rem;
+box-shadow: var(--box-shadow);display: flex;
 flex-direction: column;
 align-items: center;
-padding: 1rem;
 border-radius: 1rem;
 }
 
+.containerInfo ul{
+width: 80%;
+margin-top: 1rem;
+border-radius: 1rem;
+}
+.containerInfo ul li{
+    padding: .5rem;
+}
+.containerInfo ul li:nth-of-type(even){
+background-color: #221a6649;
+}
+.containerInfo ul li:nth-of-type(odd){
+    background-color: #221a668c;
+    }
 
+#notif {
+    margin-top: 1rem;
+
+}
+
+.box {
+    height: fit-content!important;
+    padding: 0rem;
+    overflow: hidden!important;
+}
+
+@media screen and (min-width: 481px) and (max-width: 768px){
+    #categorias{
+        flex-direction: column;
+        align-items: center;
+    }
+
+    #categorias .card-categoria{
+       min-width: 80%;
+       min-height: 30%;
+        display: block;
+    }
+
+    .card-categoria button{
+        margin-block: 1rem;
+    }
+
+    .modal div{
+        font-size: .7rem;
+    }
+
+    .containerCards {
+        flex-direction: row;
+        justify-content: center;
+    }      
+    
+    .containerCards article{
+        width: 40%;
+    }
+
+    #cards-collection div article{
+        width: 30%;
+        font-size: .8rem;
+    }
+    
+}

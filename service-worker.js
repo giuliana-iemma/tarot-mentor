@@ -9,7 +9,7 @@ const cacheAssets = [
                         'img/icon-04.png',
                         'img/icon-05.png',
                         'img/bola-magica-white.png',
-                        'scripts/main.js',
+                        'scripts/main.js?v=3',
                          'views/404.html' 
 ]
 
