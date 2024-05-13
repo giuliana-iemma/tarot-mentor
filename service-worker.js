@@ -46,13 +46,15 @@ self.addEventListener ('fetch', event => {
         caches  
             .match (event.request) //Verifico si está en el cache
            
-            .then (respuesta  =>{
-                if (respuesta ) { //Si está en el cache, retorno esa respuesta
-                    return respuesta;
+            .then (response  =>{
+                if (response ) { //Si está en el cache, retorno esa respuesta
+                    return response;
                 }
-
+            
+                // Clono la solicitud porque será consumida por cache.put()
                 let requestToCache = event.request.clone(); 
                 
+                // Intento hacer la solicitud a la red
                 return fetch(requestToCache)
                 //Devuelve una promesa que representa la respuesta de la solicitud de red hecha a requesToCache
                     .then (response =>{
@@ -89,15 +91,15 @@ self.addEventListener ('fetch', event => {
 
                     .catch (err => {
                         if (requestToCache.destination === 'image'){
-                            return fetch ('http://localhost/PWA/parcial/img/card.png')
+                            return fetch ('http://localhost/PWA/parcial/img/card.jpg')
                             .then (placeholderImage =>{
                                 return placeholderImage
                             });
                         } else {
-                            return (fetch ('http://localhost/PWA/parcial/views/404.html')
+                            return fetch ('http://localhost/PWA/parcial/views/404.html')
                             .then (err => {
                                 return err;
-                            }));
+                            });
                         }
                     });
             })

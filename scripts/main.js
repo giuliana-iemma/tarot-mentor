@@ -111,7 +111,7 @@ function showCards (arrayCards)
             divInfo.appendChild (h3);
 
             let img = d.createElement ('img');
-            img.src = `img/cards/${card.img}`;
+            img.src = `api/cards/${card.img}`;
             divInfo.appendChild (img);
 
 
@@ -174,7 +174,7 @@ function modalCard (cardArray)
         containerCardDetail.appendChild (h3);
 
         let img = d.createElement ('img');
-        img.src = `img/cards/${cardArray.img}`;
+        img.src = `api/cards/${cardArray.img}`;
         containerCardDetail.appendChild (img);
 
         let listMeaningsLight = d.createElement ('ul');    
@@ -288,7 +288,7 @@ let aleatoryCard = obtainRandomNumber(cardArray, 1);
 //Coloco título e imagen en la modal
 for (item of aleatoryCard){
     let img = d.createElement ('img');
-    img.src = `./img/cards/${item.img}`
+    img.src = `./api/cards/${item.img}`
         containerTestInfo.appendChild (img);
 
     let h2 = d.createElement ('h2');
@@ -598,7 +598,7 @@ function seeCollection (){
         card.appendChild (h3);
 
         let img = d.createElement ('img');
-        img.src = `./img/cards/${item[0].img}`;
+        img.src = `./api/cards/${item[0].img}`;
         card.appendChild (img);
 
         div.appendChild (card);
