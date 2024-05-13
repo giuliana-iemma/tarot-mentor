@@ -298,3 +298,20 @@ padding:.5rem;
 margin-block: .5rem;
 }
 
+#cards-collection div {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+#cards-collection div article{
+width: 20%;
+background-color:var(--bg-color);
+display: flex;
+flex-direction: column;
+align-items: center;
+padding: 1rem;
+border-radius: 1rem;
+}
+
+

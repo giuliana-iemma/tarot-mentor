@@ -19,16 +19,19 @@ let btnCollection = document.querySelector ("#collection button");
 let main =document.querySelector('main');
 let categorias = d.getElementById ('categorias');
 let banner = d.querySelector ('header div');
-let respuestaCorrecta;
+let correctAnswer;
 let siguienteClicked= true;
 //let puntaje = 0;
-let cartaSeleccionada = [];
+let selectedCard = [];
+let newCardsEarned = []; //Array que contendrá la o las nuevas cartas ganadas
+let respuestasCorrectas = 0;
+let errores = 0;
 
+//Inicializo LocalStorage
+cardsCollectionLS ();
 
-
-
+//BOTON APRENDER CARTAS
 btnLearn.addEventListener ('click', obtainCards);
-btnTest.addEventListener ('click', obtainAleatoryCard)
 
 function obtainCards (data){
     categorias.className = 'ocultar';
@@ -192,6 +195,9 @@ function modalCard (cardArray)
     }
 }
 
+//BOTON TEST
+btnTest.addEventListener ('click', obtainAleatoryCard);
+
 function obtainAleatoryCard (){
     //Oculto banner e y página principal
     categorias.className = 'ocultar';
@@ -226,242 +232,265 @@ function obtainAleatoryCard (){
     //Se abre una modal
 }
 
-let respuestasCorrectas = 0;
-let errores = 0;
-
 function testLoop(cardArray){
    
-        if (siguienteClicked){
-            modalTest (cardArray);
-         } 
-    
-    
+    if (siguienteClicked){
+        modalTest (cardArray);
+     } 
+ 
 }
 
 function modalTest (cardArray){
-    //Muestro una carta con cinco significados aleatorios dentro de los cuales está el correcto
-    let containerTest = d.createElement ('div');
-    containerTest.className = 'modal';
+//Muestro una carta con cinco significados aleatorios dentro de los cuales está el correcto
+let containerTest = d.createElement ('div');
+containerTest.className = 'modal';
 
-    let containerTestInfo = d.createElement ('div');
-    containerTestInfo.id = "question";
-    let meanings = []; //Lista de todos los significados
-    let meaningsCorrect = []; //Lista de todas las respuestas correctas
-    let options = []; //Lista de las respuestas que se van a mostrar en la pregunta
-    let number=1; //A usar en el bucle for para armar los radio button de las opciones
+let containerTestInfo = d.createElement ('div');
+containerTestInfo.id = "question";
+let meanings = []; //Lista de todos los significados
+let meaningsCorrect = []; //Lista de todas las respuestas correctas
+let options = []; //Lista de las respuestas que se van a mostrar en la pregunta
+let number=1; //A usar en el bucle for para armar los radio button de las opciones
 
-
-    //Lleno el array meanigns con todos los significados
-    for (let card of cardArray){
-        for (let meaning of card.meanings.light){
-            meanings.push (meaning);
-        }
-
-        for (let meaning of card.meanings.shadow){
-            meanings.push (meaning);
-        }    
+//Lleno el array meanigns con todos los significados
+for (let card of cardArray){
+    for (let meaning of card.meanings.light){
+        meanings.push (meaning);
     }
 
-    //Obtengo una carta aleatoria y le extraigo los meanings
-    let aleatoryCard = obtainRandomNumber(cardArray, 1);
+    for (let meaning of card.meanings.shadow){
+        meanings.push (meaning);
+    }    
+}
 
+//Obtengo una carta aleatoria y le extraigo los meanings
+let aleatoryCard = obtainRandomNumber(cardArray, 1);
 
-    //Coloco título e imagen en la modal
-    for (item of aleatoryCard){
-        let img = d.createElement ('img');
-        img.src = `./img/cards/${item.img}`
-            containerTestInfo.appendChild (img);
+//Coloco título e imagen en la modal
+for (item of aleatoryCard){
+    let img = d.createElement ('img');
+    img.src = `./img/cards/${item.img}`
+        containerTestInfo.appendChild (img);
 
-        let h2 = d.createElement ('h2');
-        h2.innerText = item.name;
-            containerTestInfo.appendChild (h2);
+    let h2 = d.createElement ('h2');
+    h2.innerText = item.name;
+        containerTestInfo.appendChild (h2);
+}
+
+//Agrego los meanings de la carta aleatoria al array meaningsCorrect, osea de meanings correctos
+for (info of aleatoryCard){
+    for (item of info.meanings.light){
+        meaningsCorrect.push (item);
     }
-
-    //Agrego los meanings de la carta aleatoria al array meaningsCorrect, osea de meanings correctos
-    for (info of aleatoryCard){
-        for (item of info.meanings.light){
-            meaningsCorrect.push (item);
-        }
-        for (item of info.meanings.shadow){
-            meaningsCorrect.push (item);
-        }
+    for (item of info.meanings.shadow){
+        meaningsCorrect.push (item);
     }
+}
 
-    //Obtengo un nuevo array con las respuestas correctas borradas
-    let arrayMeaningsTest = obtainInCorrect(meanings, meaningsCorrect);
+//Obtengo un nuevo array con las respuestas correctas borradas
+let arrayMeaningsTest = obtainInCorrect(meanings, meaningsCorrect);
 
-    //Obtengo 4 respuestas incorrectas
-    let randomIncorrectAnswers = obtainRandomNumber (arrayMeaningsTest, 4);
+//Obtengo 4 respuestas incorrectas
+let randomIncorrectAnswers = obtainRandomNumber (arrayMeaningsTest, 4);
 
-    //Creo la el el container de opciones
-    let containerOptions = d.createElement ('div');
-    containerOptions.className = 'options';
+//Creo la el el container de opciones
+let containerOptions = d.createElement ('div');
+containerOptions.className = 'options';
 
-    //Recorro el array de respuestas incorrectas
-    for (answer of randomIncorrectAnswers){
-       /*  console.log(answer);
-        let li = d.createElement ('li');
-        li.innerText = answer;
-        containerOptions.appendChild (li); */
-        options.push (answer);
-    }
+//Recorro el array de respuestas incorrectas
+for (answer of randomIncorrectAnswers){
+   /*  console.log(answer);
+    let li = d.createElement ('li');
+    li.innerText = answer;
+    containerOptions.appendChild (li); */
+    options.push (answer);
+}
 
-    //Obtengo una respuesta correcta y la agrego al array de respuestas
-    let correctAnswer = obtainRandomNumber(meaningsCorrect, 1);
-    for (item of correctAnswer){
-    options.push (item);
-    respuestaCorrecta = item
-   // console.log('correcta' , respuestaCorrecta);
-    }
+//Obtengo una respuesta correcta y la agrego al array de respuestas
+let correctAnswer = obtainRandomNumber(meaningsCorrect, 1);
+for (item of correctAnswer){
+options.push (item);
+correctAnswer = item
+// console.log('correcta' , correctAnswer);
+}
 
-    let optionsShow = shuffledArray (options);
-    
+let optionsShow = shuffledArray (options);
 
-    for (item of optionsShow){
-    //Incremento la variable number cada vez que se ingresa al bucle
-       // console.log(item);
-        let radio = d.createElement ('input');
-        radio.type = 'radio';
-        radio.value = item;
-        radio.name = 'option';
-        radio.id = `option${number}`;
 
-        let label = d.createElement ('label');
-        label.innerText = item;
-        label.htmlFor = `option${number}`;
+for (item of optionsShow){
+//Incremento la variable number cada vez que se ingresa al bucle
+   // console.log(item);
+    let radio = d.createElement ('input');
+    radio.type = 'radio';
+    radio.value = item;
+    radio.name = 'option';
+    radio.id = `option${number}`;
 
-        containerTestInfo.appendChild (radio);
-        containerTestInfo.appendChild (label);
+    let label = d.createElement ('label');
+    label.innerText = item;
+    label.htmlFor = `option${number}`;
 
-        label.addEventListener ('click', ()=>{
-        //    console.log(label.innerText);
-       
-        })
+    containerTestInfo.appendChild (radio);
+    containerTestInfo.appendChild (label);
 
-        number++;
-    }
+    label.addEventListener ('click', ()=>{
+    //    console.log(label.innerText);
+   
+    })
 
-    let buttonNext = d.createElement ('button');
-    buttonNext.innerText = 'Siguiente';
-    containerTestInfo.appendChild (buttonNext);
+    number++;
+}
 
-    buttonNext.addEventListener ('click', ()=>{
-        //Guardo la respuesta en la variable
-        let respuestaSeleccionada = d.querySelector ('input[type="radio"]:checked');
-       respuestaIngresada= respuestaSeleccionada.value;
-       console.log(respuestaIngresada, respuestaCorrecta);
+let buttonNext = d.createElement ('button');
+buttonNext.innerText = 'Siguiente';
+containerTestInfo.appendChild (buttonNext);
 
-       if (respuestaIngresada === respuestaCorrecta){
-        let oldQuestion = d.querySelector ('.modal');
-        respuestaIngresada = "";
-        respuestaCorrecta = "";
-        oldQuestion.remove();
-        siguienteClicked = true;
-        respuestasCorrectas++;
-        console.log(siguienteClicked);
-        testLoop (cardArray);
-        console.log('great!');
-        console.log(respuestasCorrectas);
-        } else {
-            errores++;
-            console.log('try again');
-            siguienteClicked = false;
-            console.log(errores);
-         }
+buttonNext.addEventListener ('click', ()=>{
+    //Guardo la respuesta en la variable
+    let respuestaSeleccionada = d.querySelector ('input[type="radio"]:checked');
+   respuestaIngresada= respuestaSeleccionada.value;
+   console.log(respuestaIngresada, correctAnswer);
 
-         let modal = d.querySelector ('.modal');
+   if (respuestaIngresada === correctAnswer){
+    let oldQuestion = d.querySelector ('.modal');
+    respuestaIngresada = "";
+    correctAnswer = "";
+    oldQuestion.remove();
+    siguienteClicked = true;
+    respuestasCorrectas++;
+    console.log(siguienteClicked);
+    testLoop (cardArray);
+    console.log('great!');
+    console.log(respuestasCorrectas);
+    } else {
+        errores++;
+        console.log('try again');
+        siguienteClicked = false;
+        console.log(errores);
+     }
 
-         if (errores > 3){
-             modal.remove ();
-             resetGame ();
-             console.log('intenta de nuevo');
-         } else if (respuestasCorrectas >= 2){
-             console.log('Ganaste una carta!');
-             modal.remove ();
-             resetGame ();
+     let modal = d.querySelector ('.modal');
 
-             
-         }
+     if (errores >= 3){
+         modal.remove ();
+         resetGame ();
+         console.log('intenta de nuevo');
+     } else if (respuestasCorrectas >= 1){
+         console.log('Ganaste una carta!');
+         modal.remove ();
+         resetGame ();
+        //console.log(aleatoryCard);
 
-    });
+        newCardsEarned.push (aleatoryCard);
 
-    containerTestInfo.appendChild (containerOptions);
+        let actualCardscollection = cardsCollectionAdd (newCardsEarned);
+        console.log(actualCardscollection);
 
-    containerTest.appendChild (containerTestInfo);
-    main.appendChild (containerTest);
-    
-    return {errores: errores, cantidadCorrectas : respuestasCorrectas}
+         newCardsEarned = [];
+     }
+});
+
+containerTestInfo.appendChild (containerOptions);
+
+containerTest.appendChild (containerTestInfo);
+main.appendChild (containerTest);
+
+return {errores: errores, cantidadCorrectas : respuestasCorrectas}
 }
 
 function obtainRandomNumber (array, amount){
-    //Le paso a la función dons parámetros: un array y una cantidad de números aleatorios a obtener.
+//Le paso a la función dons parámetros: un array y una cantidad de números aleatorios a obtener.
 
-    //Creo un array para guardar los elementos aletorios que extraiga del array.
-    let aleatoryElements = [];
+//Creo un array para guardar los elementos aletorios que extraiga del array.
+let aleatoryElements = [];
 
-    //Utilizo Set para regitrar los índices que ya han sido seleccionados y evitar que se repitan nuevamente.
-    let usedIndexes = new Set();
+//Utilizo Set para regitrar los índices que ya han sido seleccionados y evitar que se repitan nuevamente.
+let usedIndexes = new Set();
 
-    
-    while (aleatoryElements.length < amount){
-        //Mientras que el largode mi array de elementos Aleatorios sea menor a la cantidad de elementos que deseo obtener.
 
-        //Obtengo un número aleatorio entre 0 y el largo de mi array.
-        let randomIndex = Math.floor (Math.random () * array.length);
+while (aleatoryElements.length < amount){
+    //Mientras que el largode mi array de elementos Aleatorios sea menor a la cantidad de elementos que deseo obtener.
 
-        //Verifico si ya utilice el índice
-        if (!usedIndexes.has(randomIndex)){
-            //Agrego el elemento al array
-            aleatoryElements.push (array[randomIndex]);
-            //Registro el índice como utilizado
-            usedIndexes.add(randomIndex);
-        } 
-    }
-    return aleatoryElements;
+    //Obtengo un número aleatorio entre 0 y el largo de mi array.
+    let randomIndex = Math.floor (Math.random () * array.length);
+
+    //Verifico si ya utilice el índice
+    if (!usedIndexes.has(randomIndex)){
+        //Agrego el elemento al array
+        aleatoryElements.push (array[randomIndex]);
+        //Registro el índice como utilizado
+        usedIndexes.add(randomIndex);
+    } 
+}
+return aleatoryElements;
 }
 
 function obtainInCorrect (array, arrayCorrect){
-     //Copio el array original para no modificarlo directamente. La idea es borrar las respuestas correctas del mismo. El método slice  devuelve en un nuevo array los elementos seleccionadosdel array original.
-     const arrayCopied = array.slice();
+ //Copio el array original para no modificarlo directamente. La idea es borrar las respuestas correctas del mismo. El método slice  devuelve en un nuevo array los elementos seleccionadosdel array original.
+ const arrayCopied = array.slice();
 
-     //Recorro el array de respuestas correctas
-     for (answer of arrayCorrect){
-         //Obtengo el index de cada respuesta
-         let answerIndex = arrayCopied.indexOf(answer);
+ //Recorro el array de respuestas correctas
+ for (answer of arrayCorrect){
+     //Obtengo el index de cada respuesta
+     let answerIndex = arrayCopied.indexOf(answer);
 
-        //Remuevo del array copiado las respuestas correctas a través de los índices obtenidos
-        let removed = arrayCopied.splice (answerIndex, 1);
-     }
+    //Remuevo del array copiado las respuestas correctas a través de los índices obtenidos
+    let removed = arrayCopied.splice (answerIndex, 1);
+ }
 
-    // Retorno este nuevo array
-    return arrayCopied;
+// Retorno este nuevo array
+return arrayCopied;
 }
 
 function shuffledArray (array){
-    //Copio el array para no modificarlo
-    let shuffledArray = array.slice();
+//Copio el array para no modificarlo
+let shuffledArray = array.slice();
 
-    //Algoritmo de Fisher-Yates para mezclar el array
-    for (let i = shuffledArray.length - 1; i > 0; i--){
-        //Genero un índice aleatorio entre 0 e i
-        const aleatoryIndex = Math.floor (Math.random () * (i + 1));
+//Algoritmo de Fisher-Yates para mezclar el array
+for (let i = shuffledArray.length - 1; i > 0; i--){
+    //Genero un índice aleatorio entre 0 e i
+    const aleatoryIndex = Math.floor (Math.random () * (i + 1));
 
-        //Intercambio elementos entre suffledArray[aleatoryIndex] y suffledArray [i]
-        [shuffledArray[i], shuffledArray[aleatoryIndex]] = [shuffledArray[aleatoryIndex], shuffledArray[i]];
+    //Intercambio elementos entre suffledArray[aleatoryIndex] y suffledArray [i]
+    [shuffledArray[i], shuffledArray[aleatoryIndex]] = [shuffledArray[aleatoryIndex], shuffledArray[i]];
 
-        return shuffledArray;
-    }
+    return shuffledArray;
+}
 
 }
 
 function resetGame (){
-    console.log('Game reseted');
-    respuestasCorrectas = 0;
-    errores = 0; 
-    respuestaCorrecta = "";
-    siguienteClicked = true;
-    cartaSeleccionada = [];
-    categorias.className = '';
-    banner.className = '';
+respuestasCorrectas = 0;
+errores = 0; 
+correctAnswer = "";
+siguienteClicked = true;
+selectedCard = [];
+categorias.className = '';
+banner.className = '';
+}
 
+//BOTON COLECCIÓN
+btnCollection.addEventListener ('click', )
+
+
+
+function cardsCollectionLS (){
+    //Guardo el array de colección en Local Storage
+    const cardsCollectionStart = [];
+    localStorage.setItem('cardsCollection', JSON.stringify(cardsCollectionStart));
+    console.log('LS Creado');
+}
+
+function cardsCollectionAdd (newCardsEarned){
+    //Obtengo la información de LS y la parseo
+    let cardsCollectionAchieved = JSON.parse(localStorage.getItem('cardsCollection')) || [];
+
+    //Le agrego las nuevas cartas
+    cardsCollectionAchieved = cardsCollectionAchieved.concat(newCardsEarned);
+
+    localStorage.setItem('cardsCollection', JSON.stringify(cardsCollectionAchieved));
+
+    console.log('LS recargado', cardsCollectionAchieved);
+
+    return cardsCollectionAchieved;
 }
