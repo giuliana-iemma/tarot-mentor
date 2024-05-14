@@ -246,247 +246,268 @@ function testLoop(cardArray){
 }
 
 function modalTest (cardArray){
-//Muestro una carta con cinco significados aleatorios dentro de los cuales está el correcto
-let containerTest = d.createElement ('div');
-containerTest.className = 'modal';
+    //Función para mostrar una carta con cinco significados aleatorios dentro de los cuales está el correcto
 
+    //Creo el contenedor modal para la modal del test
+    let containerTest = d.createElement ('div');
+    containerTest.className = 'modal';
 
+    //Creo el contenedor del test
+    let containerTestInfo = d.createElement ('div');
+    containerTestInfo.id = "question";
 
-let containerTestInfo = d.createElement ('div');
-containerTestInfo.id = "question";
+    //Creo un botón que permite abandonar el test
+    let btnCerrar = d.createElement ('button');
+    btnCerrar.innerText = 'X';
+    btnCerrar.className = 'btnCerrar'
+    btnCerrar.addEventListener ('click',()=>{
+        containerTest.remove ();
+        categorias.className = '';
+        banner.className = '';
+        resetGame ();
+    });
+        containerTestInfo.appendChild (btnCerrar);
 
-let btnCerrar = d.createElement ('button');
-btnCerrar.innerText = 'X';
-btnCerrar.className = 'btnCerrar'
-btnCerrar.addEventListener ('click',()=>{
-    containerTest.remove ();
-    categorias.className = '';
-    banner.className = '';
-});
+    //Data
+    let meanings = []; //Lista de todos los significados
+    let meaningsCorrect = []; //Lista de todas las respuestas correctas
+    let options = []; //Lista de las respuestas que se van a mostrar en la pregunta
+    let number=1; //A usar en el bucle for para armar los radio button de las opciones
+    let answersCorrect = []; //Array que va a guardar las respuestas correctas con los significados que ya salieron y que el usuario ya seleccionó y ganó
 
-containerTestInfo.appendChild (btnCerrar);
-
-let meanings = []; //Lista de todos los significados
-let meaningsCorrect = []; //Lista de todas las respuestas correctas
-let options = []; //Lista de las respuestas que se van a mostrar en la pregunta
-let number=1; //A usar en el bucle for para armar los radio button de las opciones
-
-//Lleno el array meanigns con todos los significados
-for (let card of cardArray){
-    for (let meaning of card.meanings.light){
-        meanings.push (meaning);
-    }
-
-    for (let meaning of card.meanings.shadow){
-        meanings.push (meaning);
-    }    
-}
-
-//Obtengo una carta aleatoria y le extraigo los meanings
-let aleatoryCard = obtainRandomNumber(cardArray, 1);
-
-//Coloco título e imagen en la modal
-for (item of aleatoryCard){
-    let img = d.createElement ('img');
-    img.src = `./api/cards/${item.img}`
-        containerTestInfo.appendChild (img);
-
-    let h2 = d.createElement ('h2');
-    h2.innerText = item.name;
-        containerTestInfo.appendChild (h2);
-}
-
-//Agrego los meanings de la carta aleatoria al array meaningsCorrect, osea de meanings correctos
-for (info of aleatoryCard){
-    for (item of info.meanings.light){
-        meaningsCorrect.push (item);
-    }
-    for (item of info.meanings.shadow){
-        meaningsCorrect.push (item);
-    }
-}
-
-//Obtengo un nuevo array con las respuestas correctas borradas
-let arrayMeaningsTest = obtainInCorrect(meanings, meaningsCorrect);
-
-//Obtengo 4 respuestas incorrectas
-let randomIncorrectAnswers = obtainRandomNumber (arrayMeaningsTest, 4);
-
-//Creo la el el container de opciones
-let containerOptions = d.createElement ('div');
-containerOptions.className = 'options';
-
-//Recorro el array de respuestas incorrectas
-for (answer of randomIncorrectAnswers){
-   /*  console.log(answer);
-    let li = d.createElement ('li');
-    li.innerText = answer;
-    containerOptions.appendChild (li); */
-    options.push (answer);
-}
-
-//Obtengo una respuesta correcta y la agrego al array de respuestas
-let correctAnswer = obtainRandomNumber(meaningsCorrect, 1);
-for (item of correctAnswer){
-options.push (item);
-correctAnswer = item
-// console.log('correcta' , correctAnswer);
-}
-
-let optionsShow = shuffledArray (options);
-
-
-for (item of optionsShow){
-//Incremento la variable number cada vez que se ingresa al bucle
-   // console.log(item);
-    let radio = d.createElement ('input');
-    radio.type = 'radio';
-    radio.value = item;
-    radio.name = 'option';
-    radio.id = `option${number}`;
-
-    let label = d.createElement ('label');
-    label.innerText = item;
-    label.htmlFor = `option${number}`;
-
-    containerTestInfo.appendChild (radio);
-    containerTestInfo.appendChild (label);
-
-    label.addEventListener ('click', ()=>{
-    //    console.log(label.innerText);
-   
-    })
-
-    number++;
-}
-
-let buttonNext = d.createElement ('button');
-buttonNext.innerText = 'Send';
-containerTestInfo.appendChild (buttonNext);
-
-
-
-buttonNext.addEventListener ('click', ()=>{
-    //Guardo la respuesta en la variable
-    let respuestaSeleccionada = d.querySelector ('input[type="radio"]:checked');
-   respuestaIngresada= respuestaSeleccionada.value;
-   console.log(respuestaIngresada, correctAnswer);
-
-   if (respuestaIngresada === correctAnswer){
-    let oldQuestion = d.querySelector ('.modal');
-    respuestaIngresada = "";
-    correctAnswer = "";
-    oldQuestion.remove();
-    siguienteClicked = true;
-    respuestasCorrectas++;
-    console.log(siguienteClicked);
-    testLoop (cardArray);
-    console.log('great!');
-    console.log(respuestasCorrectas);
-    } else {
-        errores++;
-        
-        let notif = d.getElementById ('notif');
-        console.log(notif);
-
-        if (notif){
-            notif.remove();
+    //Lleno el array meanings con todos los significados
+    for (let card of cardArray){
+        for (let meaning of card.meanings.light){
+            meanings.push (meaning);
         }
 
-        let notification = d.createElement ('div');
-        notification.id = 'notif';
+        for (let meaning of card.meanings.shadow){
+            meanings.push (meaning);
+        }    
+    }
 
-        let notificationContent = d.createElement ('p');
-        notificationContent.innerText = 'Incorrect';
+    //Obtengo una carta aleatoria y le extraigo los meanings
+    let aleatoryCard = obtainRandomNumber(cardArray, 1);
 
-        let numberMistakes = d.createElement ('p');
-        numberMistakes.innerText= `Mistakes: ${errores}`;
-
-        notification.appendChild (notificationContent);
-        notification.appendChild (numberMistakes);
-        containerTestInfo.appendChild (notification);
-        console.log('try again');
-        siguienteClicked = false;       
-     }
-
-    let modal = d.querySelector ('.modal');
-
-    if (errores >= 3){
-        modal.remove ();
-        resetGame ();
-        console.log('intenta de nuevo');
-
-        let containerPrompt = d.createElement ('div');
-        containerPrompt.className = 'modal prompt';
-
-        let containerTextPrompt = d.createElement ('div');
-        containerTextPrompt.className = 'box';
+    //Recorro el array de la carta aleatoria y coloco título e imagen en la modal
+    for (item of aleatoryCard){
+        let img = d.createElement ('img');
+        img.src = `./api/cards/${item.img}`
+            containerTestInfo.appendChild (img);
 
         let h2 = d.createElement ('h2');
-        h2.innerText = 'Vuelve a intentarlo';
+        h2.innerText = item.name;
+            containerTestInfo.appendChild (h2);
+    }
 
-        let p = d.createElement ('p');
-        p.innerText = 'Has cometido 3 errores. Vuelve a empezar';
+    //Agrego los meanings de la carta aleatoria al array meaningsCorrect, osea de meanings correctos
+    for (info of aleatoryCard){
+        for (item of info.meanings.light){
+            meaningsCorrect.push (item);
+        }
+        for (item of info.meanings.shadow){
+            meaningsCorrect.push (item);
+        }
+    }
 
-        let btnCerrar = d.createElement ('button');
-        btnCerrar.innerText = 'X';
-        btnCerrar.className = 'btnCerrar'
-        btnCerrar.addEventListener ('click',()=>{
-            containerPrompt.remove ();
-            categorias.className = '';
-            banner.className = '';
-        });
+    //Obtengo un nuevo array con las respuestas correctas borradas
+    let arrayMeaningsTest = obtainInCorrect(meanings, meaningsCorrect);
 
-        containerTextPrompt.appendChild (btnCerrar);
-        containerTextPrompt.appendChild (h2);
-        containerTextPrompt.appendChild (p);
-        containerPrompt.appendChild (containerTextPrompt);
-        main.appendChild (containerPrompt);
+    //Obtengo 4 respuestas incorrectas random
+    let randomIncorrectAnswers = obtainRandomNumber (arrayMeaningsTest, 4);
 
-    } else if (respuestasCorrectas >= 1){
-        console.log('Ganaste una carta!');
-        modal.remove ();
-        resetGame ();
-        //console.log(aleatoryCard);
-        let containerPrompt = d.createElement ('div');
-        containerPrompt.className = 'modal prompt';
+    //Recorro el array de respuestas incorrectas y lo guardo en el array de opciones a mostrar
+    for (answer of randomIncorrectAnswers){
+    /*  console.log(answer);
+        let li = d.createElement ('li');
+        li.innerText = answer;
+        containerOptions.appendChild (li); */
+        options.push (answer);
+    }
 
-        let containerTextPrompt = d.createElement ('div');
-        containerTextPrompt.className = 'box';
+    //Obtengo una respuesta correcta y la agrego al array de respuestas
+    let correctAnswer = obtainRandomNumber(meaningsCorrect, 1);
+    for (item of correctAnswer){
+    options.push (item);
+    correctAnswer = item
+    // console.log('correcta' , correctAnswer);
+    }
 
-        let h2 = d.createElement ('h2');
-        h2.innerText = 'Felicitaciones';
+    let optionsShow = shuffledArray (options);
 
-        let p = d.createElement ('p');
-        p.innerText = 'Has ganado una carta';
+    //Creo el contenedor de opciones
+    let containerOptions = d.createElement ('div');
+    containerOptions.className = 'options';
 
-        let btnCerrar = d.createElement ('button');
-        btnCerrar.innerText = 'X';
-        btnCerrar.className = 'btnCerrar'
-        btnCerrar.addEventListener ('click',()=>{
-            containerPrompt.remove ();
-            
-        });
+    for (item of optionsShow){
+    //Incremento la variable number cada vez que se ingresa al bucle
+    // console.log(item);
+        let radio = d.createElement ('input');
+        radio.type = 'radio';
+        radio.value = item;
+        radio.name = 'option';
+        radio.id = `option${number}`;
 
-        containerTextPrompt.appendChild (btnCerrar);
-        containerTextPrompt.appendChild (h2);
-        containerTextPrompt.appendChild (p);
-        containerPrompt.appendChild (containerTextPrompt);
-        main.appendChild (containerPrompt);
+        let label = d.createElement ('label');
+        label.innerText = item;
+        label.htmlFor = `option${number}`;
 
-        newCardsEarned.push (aleatoryCard);
+        containerOptions.appendChild (radio);
+        containerOptions.appendChild (label);
+      
+        number++;
+    }
 
-        cardsCollectionAdd (newCardsEarned);
-       // console.log(JSON.parse(localStorage.getItem('cardsCollection')) || []);
+    let buttonNext = d.createElement ('button');
+    buttonNext.innerText = 'Send';
+    buttonNext.addEventListener ('click', ()=>{
+        //Guardo la respuesta en la variable
+        let respuestaSeleccionada = d.querySelector ('input[type="radio"]:checked');
+        respuestaIngresada = respuestaSeleccionada.value;
+      //  console.log(respuestaIngresada, correctAnswer);
+
+    if (respuestaIngresada === correctAnswer){   
+         //Borro las opciones viejas
+        // containerOptions.textContent = '';
+        //let oldQuestion = d.querySelector ('.modal');
+        //oldQuestion.remove();
+
+        //Borro la respuesta ingresada 
+        respuestaIngresada = "";
+       
+        //obtengo el indice de la respuesta correcta en el array
+        let indexCorrectAnswer = meaningsCorrect.indexOf (correctAnswer);
+        //console.log(indexCorrectAnswer);
+        //console.log('correct answer', correctAnswer);
+
+        //Borro la respuesta correcta del array de respuestas correctas
+        meaningsCorrect.splice (indexCorrectAnswer, 1);
+        //console.log('nuevo array', meaningsCorrect);
+
+         //Vacío la respuesta correcta
+        correctAnswer = "";
+
+        siguienteClicked = true;
+        respuestasCorrectas++;
         
-       //  newCardsEarned = [];
-     }
-});
+       /*  let notif = d.getElementById ('notif');
 
-containerTestInfo.appendChild (containerOptions);
+        if(notif){
+            notif.remove();
+        } */
+        
+       // optionsLoop (arrayMeaningsTest, meaningsCorrect, optionsShow, correctAnswer);
+       
+        } else {
+            errores++;
+            
+            let notif = d.getElementById ('notif');
 
-containerTest.appendChild (containerTestInfo);
-main.appendChild (containerTest);
+            if (notif){
+                notif.remove();
+            }
+
+            let notification = d.createElement ('div');
+            notification.id = 'notif';
+
+            let notificationContent = d.createElement ('p');
+            notificationContent.innerText = 'Incorrect';
+
+            let numberMistakes = d.createElement ('p');
+            numberMistakes.innerText= `Mistakes: ${errores}`;
+
+            notification.appendChild (notificationContent);
+            notification.appendChild (numberMistakes);
+            containerTestInfo.appendChild (notification);
+            console.log('try again');
+            siguienteClicked = false;       
+        }
+
+        let modal = d.querySelector ('.modal');
+
+        if (errores >= 3){
+            modal.remove ();
+            resetGame ();
+            console.log('intenta de nuevo');
+
+            let containerPrompt = d.createElement ('div');
+            containerPrompt.className = 'modal prompt';
+
+            let containerTextPrompt = d.createElement ('div');
+            containerTextPrompt.className = 'box';
+
+            let h2 = d.createElement ('h2');
+            h2.innerText = 'Vuelve a intentarlo';
+
+            let p = d.createElement ('p');
+            p.innerText = 'Has cometido 3 errores. Vuelve a empezar';
+
+            let btnCerrar = d.createElement ('button');
+            btnCerrar.innerText = 'X';
+            btnCerrar.className = 'btnCerrar'
+            btnCerrar.addEventListener ('click',()=>{
+                containerPrompt.remove ();
+                categorias.className = '';
+                banner.className = '';
+            });
+
+            containerTextPrompt.appendChild (btnCerrar);
+            containerTextPrompt.appendChild (h2);
+            containerTextPrompt.appendChild (p);
+            containerPrompt.appendChild (containerTextPrompt);
+            main.appendChild (containerPrompt);
+
+        } else if (respuestasCorrectas >= 1){
+            console.log("Ganaste 1 carta");
+            modal.remove ();
+            resetGame ();
+            //console.log(aleatoryCard);
+            let containerPrompt = d.createElement ('div');
+            containerPrompt.className = 'modal prompt';
+
+            let containerTextPrompt = d.createElement ('div');
+            containerTextPrompt.className = 'box';
+
+            let h2 = d.createElement ('h2');
+            h2.innerText = 'Felicitaciones';
+
+            let p = d.createElement ('p');
+            p.innerText = 'Has ganado una carta';
+
+            let btnCerrar = d.createElement ('button');
+            btnCerrar.innerText = 'X';
+            btnCerrar.className = 'btnCerrar'
+            btnCerrar.addEventListener ('click',()=>{
+                containerPrompt.remove ();
+                
+            });
+
+            containerTextPrompt.appendChild (btnCerrar);
+            containerTextPrompt.appendChild (h2);
+            containerTextPrompt.appendChild (p);
+            containerPrompt.appendChild (containerTextPrompt);
+            main.appendChild (containerPrompt);
+
+            console.log(aleatoryCard.name);
+            let cardsCollectionAchieved = JSON.parse(localStorage.getItem('cardsCollection')) || [];
+            let cardAppeared = cardsCollectionAchieved.indexOf (aleatoryCard.name);
+
+            if (cardAppeared = -1){
+                newCardsEarned.push (aleatoryCard);
+                cardsCollectionAdd (newCardsEarned);
+            }
+        
+        // console.log(JSON.parse(localStorage.getItem('cardsCollection')) || []);
+           // console.log(newCardsEarned);
+            // newCardsEarned = [];
+        }
+    });
+
+    containerTestInfo.appendChild (containerOptions);
+    containerTestInfo.appendChild (buttonNext);
+
+    containerTest.appendChild (containerTestInfo);
+    main.appendChild (containerTest);
 
 return {errores: errores, cantidadCorrectas : respuestasCorrectas}
 }
@@ -607,10 +628,6 @@ function seeCollection (){
     main.appendChild (section);
 }
 
-
-    
-
-
 function cardsCollectionLS (){
     //Guardo el array de colección en Local Storage
     if (!localStorage.getItem ('cardsCollection')){
@@ -630,7 +647,7 @@ function cardsCollectionAdd (newCardsEarned){
         cardsCollectionAchieved = cardsCollectionAchieved.concat(newCardsEarned);
 
         localStorage.setItem('cardsCollection', JSON.stringify(cardsCollectionAchieved));
-        console.log('LS recargado', cardsCollectionAchieved);
+      //  console.log('LS recargado', cardsCollectionAchieved);
 
         return cardsCollectionAchieved;
     } else {
@@ -650,7 +667,51 @@ function cardsCollectionAdd (newCardsEarned){
     return cardsCollectionAchieved; */
 }
 
+function optionsLoop (arrayIncorrect, arrayCorrect, arrayOptions, correctAnswer, number = 1){
+ 
 
-//Si estan repetidas, no guardarlas en la collection
-//Inicio de sesión
-//Varias preg por carta
+   containerOptions.textContent = '';
+        
+    //Cargar nuevas opciones
+    let randomIncorrectAnswers = obtainRandomNumber (arrayIncorrect, 4);
+   
+    //Recorro el array de respuestas incorrectas y lo guardo en el array de opciones a mostrar
+    for (answer of randomIncorrectAnswers){
+        /*  console.log(answer);
+            let li = d.createElement ('li');
+            li.innerText = answer;
+            containerOptions.appendChild (li); */
+            arrayOptions.push (answer);
+        }
+
+    //Obtengo una respuesta correcta y la agrego al array de respuestas
+    correctAnswer = obtainRandomNumber( arrayCorrect, 1);
+    
+    for (item of correctAnswer){
+        arrayOptions.push (item);
+        correctAnswer = item;
+    }
+
+    //Mezclo las opciones
+    let optionsShow = shuffledArray (arrayOptions);
+
+
+    for (item of optionsShow){
+    //Incremento la variable number cada vez que se ingresa al bucle
+    // console.log(item);
+        let radio = d.createElement ('input');
+        radio.type = 'radio';
+        radio.value = item;
+        radio.name = 'option';
+        radio.id = `option${number}`;
+
+        let label = d.createElement ('label');
+        label.innerText = item;
+        label.htmlFor = `option${number}`;
+
+        containerOptions.appendChild (radio);
+        containerOptions.appendChild (label);
+
+        number++;
+        }
+}
